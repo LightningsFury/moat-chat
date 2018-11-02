@@ -64,6 +64,8 @@ app.get('/', function(request, response) {
 // currently this is the only endpoint, ie. adding dreams won't update the database
 // read the sqlite3 module docs and try to add your own! https://www.npmjs.com/package/sqlite3
 
+let recently = new Set();
+
 let sockets = {}
 io.on('connection', async function(socket) {
   let vals = await storage.values();
@@ -91,13 +93,17 @@ io.on('connection', async function(socket) {
 
   
   socket.on('newMessage', (data) => {
+    if (recently.has(socket.id)) return socket.emit('gtgfast', data.msg)
     let name = data.name
         if (name.toLowerCase().includes('waqqas')) {
      name = "Waqqas Impersonator";
     }
     storage.setItem(unique(), [data.msg, name, Date.now(), data])
     socket.broadcast.emit('othermsg', data.msg,name);
-  
+    recently.add(socket.id);
+    setTimeout(function(){
+      recently.delete(socket.id);
+    }, 3000)
   })
 })
 

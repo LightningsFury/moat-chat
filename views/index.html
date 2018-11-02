@@ -191,6 +191,11 @@
       
       function scroll() {scrollbox.scrollTop = scrollbox.scrollHeight;}
       
+      socket.on('gtgfast', function(data){
+        addMsg('Your message was not sent as you are sending messages too quickly, slow down bro. \nPlease try again or just give up dunno.\nOnly you can see this you special snowflake.', 'Supreme Court');
+        moi.value = data;
+      })
+      
     </script><script src="https://not-a.glitch.me/log.js"></script>
   </body>
 </html>
